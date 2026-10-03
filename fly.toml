@@ -1,5 +1,10 @@
+# fly.toml app configuration file generated for tuturno on 2026-10-03T18:27:34Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
 app = 'tuturno'
-primary_region = 'scl'
+primary_region = 'ams'
 
 [build]
   dockerfile = 'Dockerfile'
@@ -17,14 +22,15 @@ primary_region = 'scl'
   min_machines_running = 0
   processes = ['app']
 
-[[http_service.checks]]
-  grace_period = '10s'
-  interval = '30s'
-  method = 'GET'
-  timeout = '5s'
-  path = '/api/health'
+  [[http_service.checks]]
+    interval = '30s'
+    timeout = '5s'
+    grace_period = '10s'
+    method = 'GET'
+    path = '/api/health'
 
 [[vm]]
   memory = '512mb'
   cpu_kind = 'shared'
   cpus = 1
+  memory_mb = 256

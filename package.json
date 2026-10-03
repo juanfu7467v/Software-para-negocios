@@ -1,0 +1,38 @@
+{
+  "name": "pago-planes-consulta-pe",
+  "version": "1.0.0",
+  "description": "Servidor para procesar pagos y otorgar créditos en Consulta PE con MercadoPago y Flow",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.2.0",
+    "firebase-admin": "^12.7.0",
+    "helmet": "^7.1.0",
+    "jspdf": "^2.5.1",
+    "mercadopago": "^2.1.0",
+    "moment-timezone": "^0.5.45",
+    "pdfkit": "^0.15.0",
+    "pdfkit-table": "^0.1.99",
+    "qrcode": "^1.5.3",
+    "resend": "^3.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "firebase-tools": "^13.0.0"
+  }
+}

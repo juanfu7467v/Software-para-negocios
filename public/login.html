@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  
+  <title>Iniciar sesión en FacilitoTools | Comprobantes y validación de clientes</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png" />
+    <link rel="shortcut icon" href="/assets/icons/favicon.ico" />
+    <link rel="manifest" href="/assets/icons/site.webmanifest" />
+  <meta name="description" content="Accede a tu cuenta de FacilitoTools. Inicia sesión, regístrate o recupera tu contraseña para generar boletas y facturas, y validar DNI, RUC y teléfonos de tus clientes.">
+  <meta name="keywords" content="login facilitotools, registro facilitotools, recuperar cuenta facilitotools, acceso facilitotools, comprar creditos facilitotools, paquetes facilitotools" />
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:title" content="Acceso a FacilitoTools | Gestión de tu cuenta y tu plan" />
+  <meta property="og:description" content="Ingresa a tu panel de control. Genera comprobantes, valida clientes y gestiona tu plan de FacilitoTools." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://facilitotools.com/login" />
+  <meta property="og:image" content="/assets/icons/apple-touch-icon.png" />
+  <meta property="og:image:width" content="128" />
+  <meta property="og:image:height" content="128" />
+
+
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script src="https://www.google.com/recaptcha/api.js?render=explicit&onload=recaptchaOnLoad" async defer></script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+        --primary: #007bff; 
+        --secondary: #00e676; 
+        --google-blue: #4285f4;
+        --github-dark: #24292e;
+        --accent: #ff4081;
+        --button-gradient: linear-gradient(135deg, #0072ff 0%, #00e676 100%);
+        --bg-gradient: radial-gradient(circle at top right, #fdfbfb 0%, #ebedee 100%);
+        --text-dark: #1a1e2e;
+        --text-muted: #64748b;
+        --input-bg: rgba(241, 245, 249, 0.8);
+        --btn-height: 58px;
+        --radius: 22px;
+    }
+
+    * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        background: #0a0f1e;
+        color: var(--text-dark);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    /* Fondo 3D sin contenedores extra */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            radial-gradient(circle at 20% 50%, rgba(0, 114, 255, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(0, 230, 118, 0.12) 0%, transparent 50%),
+            radial-gradient(circle at 50% 80%, rgba(255, 64, 129, 0.1) 0%, transparent 50%);
+        background-size: 200% 200%;
+        animation: floatBackground 15s ease-in-out infinite;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    body::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(0deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+        transform: perspective(600px) rotateX(60deg) scale(1.8);
+        animation: moveGrid 20s linear infinite;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    @keyframes floatBackground {
+        0%, 100% { background-position: 0% 0%; }
+        25% { background-position: 50% 30%; }
+        50% { background-position: 100% 70%; }
+        75% { background-position: 30% 90%; }
+    }
+
+    @keyframes moveGrid {
+        0% { transform: perspective(600px) rotateX(60deg) translateY(0) scale(1.8); }
+        100% { transform: perspective(600px) rotateX(60deg) translateY(50px) scale(1.8); }
+    }
+
+    #app-container {
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    .screen {
+        width: 100%;
+        max-width: 480px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Estilos Títulos */
+    h3 {
+        font-weight: 800;
+        font-size: 2.4rem;
+        margin-bottom: 8px;
+        text-align: center;
+        background: var(--button-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -1px;
+    }
+
+    .form-subtitle {
+        text-align: center;
+        color: #cbd5e1;
+        font-size: 1rem;
+        margin-bottom: 32px;
+        font-weight: 400;
+    }
+
+    /* Inputs Nativo-Style */
+    .input-group {
+        width: 100%;
+        margin-bottom: 16px;
+        position: relative;
+    }
+
+    .input-field {
+        width: 100%;
+        height: 62px;
+        padding: 0 20px 0 54px;
+        font-size: 1rem;
+        border: 2px solid rgba(255,255,255,0.08);
+        border-radius: var(--radius);
+        background: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(12px);
+        color: #f1f5f9;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: 'Inter', sans-serif;
+    }
+
+    .input-field:focus {
+        background: rgba(15, 23, 42, 0.9);
+        border-color: var(--primary);
+        box-shadow: 0 8px 32px rgba(0, 114, 255, 0.2);
+        outline: none;
+    }
+
+    .input-field::placeholder {
+        color: #94a3b8;
+    }
+
+    .field-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 22px;
+        transition: color 0.3s;
+    }
+
+    .input-field:focus ~ .field-icon {
+        color: var(--primary);
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #94a3b8;
+        padding: 4px;
+        user-select: none;
+        transition: color 0.3s;
+    }
+
+    .password-toggle:hover {
+        color: var(--primary);
+    }
+
+    /* Botones Pro */
+    .primary-btn, .recover-btn {
+        width: 100%;
+        height: var(--btn-height);
+        background: var(--button-gradient);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius);
+        font-size: 1.1rem;
+        font-weight: 600;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin: 12px 0;
+        box-shadow: 0 12px 24px -6px rgba(0, 114, 255, 0.4);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .primary-btn:hover, .recover-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 20px 40px -8px rgba(0, 114, 255, 0.5);
+    }
+
+    .primary-btn:active, .recover-btn:active {
+        transform: scale(0.97);
+        box-shadow: 0 4px 10px rgba(0, 114, 255, 0.2);
+    }
+
+    .register-btn {
+        width: 100%;
+        height: var(--btn-height);
+        background: rgba(255,255,255,0.08);
+        backdrop-filter: blur(12px);
+        color: #f1f5f9;
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: var(--radius);
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-top: 8px;
+    }
+
+    .register-btn:hover {
+        background: rgba(255,255,255,0.15);
+        border-color: var(--primary);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 114, 255, 0.2);
+    }
+
+    .register-btn:active {
+        transform: scale(0.98);
+    }
+
+    /* Welcome Screen Buttons */
+    .btn {
+        width: 100%;
+        height: var(--btn-height);
+        border-radius: var(--radius);
+        font-weight: 600;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .btn:active {
+        transform: scale(0.97);
+    }
+
+    .btn-primary-gradient {
+        background: rgba(255,255,255,0.08);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(0, 114, 255, 0.3);
+        color: #ffffff;
+    }
+
+    .btn-primary-gradient:hover {
+        background: rgba(0, 114, 255, 0.2);
+        box-shadow: 0 10px 30px rgba(0, 114, 255, 0.3);
+    }
+
+    .btn-google { 
+        background: rgba(255,255,255,0.08);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #f1f5f9;
+    }
+    .btn-google:hover {
+        background: rgba(255,255,255,0.15);
+    }
+
+    .btn-github { 
+        background: rgba(36, 41, 46, 0.9);
+        backdrop-filter: blur(12px);
+        border: none;
+        color: #fff;
+    }
+    .btn-github:hover {
+        background: #24292e;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .btn-login-red { 
+        background: rgba(220, 38, 38, 0.2);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(220,38,38,0.3);
+        color: #fecaca;
+    }
+    .btn-login-red:hover {
+        background: rgba(220,38,38,0.3);
+        box-shadow: 0 10px 30px rgba(220,38,38,0.2);
+    }
+
+    /* Forms container */
+    .login-form, .register-form, .recover-password-form {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        animation: fadeInUp 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .separator {
+        display: flex;
+        align-items: center;
+        margin: 24px 0;
+        color: #94a3b8;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .separator::before, .separator::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: rgba(255,255,255,0.15);
+    }
+
+    .separator span { padding: 0 15px; }
+
+    .text-link {
+        text-align: center;
+        margin-top: 12px;
+        font-size: 0.95rem;
+        color: #cbd5e1;
+    }
+
+    .text-link a {
+        color: var(--primary);
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .text-link a:hover {
+        color: var(--secondary);
+    }
+
+    /* ReCAPTCHA centering */
+    .recaptcha-container {
+        display: flex;
+        justify-content: center;
+        margin: 10px 0;
+        transform: scale(0.9);
+    }
+
+    /* Modal 3D modern */
+    .modal-3d {
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(20px);
+        padding: 32px;
+        border-radius: 30px;
+        width: 90%;
+        max-width: 400px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #f1f5f9;
+    }
+
+    .welcome-icon {
+        font-size: 80px;
+        background: var(--button-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+    }
+
+    /* NUEVO: Modal de mensajes profesional */
+    .message-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        z-index: 50000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        animation: fadeInOverlay 0.3s ease-out;
+    }
+
+    .message-modal-overlay.show {
+        display: flex;
+    }
+
+    @keyframes fadeInOverlay {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideInModal {
+        from {
+            opacity: 0;
+            transform: translate(-50%, -48%) scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+    }
+
+    @keyframes slideOutModal {
+        from {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        to {
+            opacity: 0;
+            transform: translate(-50%, -48%) scale(0.9);
+        }
+    }
+
+    .message-modal-content {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        padding: 32px 24px;
+        width: 90%;
+        max-width: 360px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        text-align: center;
+        border: 1px solid rgba(255,255,255,0.1);
+        animation: slideInModal 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .message-modal-content.closing {
+        animation: slideOutModal 0.3s ease-out forwards;
+    }
+
+    .message-modal-icon {
+        font-size: 56px;
+        margin-bottom: 16px;
+    }
+
+    .message-modal-text {
+        font-size: 16px;
+        font-weight: 500;
+        color: #e2e8f0;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    @media (max-width: 480px) {
+        h3 { font-size: 2rem; }
+        .screen { padding: 20px; }
+    }
+
+    /* ── Checkbox de términos ── */
+    .terms-check-wrapper {
+        width: 100%;
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(12px);
+        border-radius: var(--radius);
+        border: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 0 20px;
+        height: 62px;
+        margin-bottom: 4px;
+        cursor: pointer;
+        transition: border-color 0.3s, background 0.3s;
+    }
+
+    .terms-check-wrapper:has(input:checked) {
+        border-color: var(--primary);
+        background: rgba(0, 114, 255, 0.1);
+    }
+
+    .terms-check-wrapper input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        min-width: 20px;
+        accent-color: var(--primary);
+        cursor: pointer;
+        border-radius: 6px;
+        flex-shrink: 0;
+    }
+
+    .terms-check-wrapper label {
+        font-size: 0.875rem;
+        color: #cbd5e1;
+        cursor: pointer;
+        line-height: 1.4;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .terms-check-wrapper label a {
+        color: var(--primary);
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .terms-check-wrapper label a:hover {
+        text-decoration: underline;
+    }
+
+    /* Mejoras responsive y texto */
+    h1 {
+        color: #f1f5f9;
+        font-size: 2.5rem;
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+    .welcome-subtitle {
+        color: #94a3b8;
+    }
+    .footer-text {
+        color: #94a3b8;
+    }
+    .footer-text a {
+        color: #cbd5e1;
+        transition: color 0.3s;
+    }
+    .footer-text a:hover {
+        color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <div id="app-container">
+    
+    <div id="welcome-screen" class="screen" style="display: flex;">
+        <img src="/assets/icons/apple-touch-icon.png" alt="Seguridad" style="width: 80px; height: 80px; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(0,114,255,0.5));">
+        <h1 class="text-4xl font-extrabold mb-2 tracking-tight">FacilitoTools</h1>
+        <p class="text-slate-400 mb-10 text-center px-6 welcome-subtitle">Genera comprobantes y valida a tus clientes desde un solo lugar.</p>
+        
+        <button class="btn btn-primary-gradient" onclick="showRegisterFormFromWelcome()">
+          <span class="material-icons">person_add</span>
+          <span>Crear cuenta gratis</span>
+        </button>
+        
+        <div class="w-full flex items-center my-4">
+            <div class="flex-1 h-px bg-slate-600/30"></div>
+            <span class="px-3 text-xs text-slate-400 font-bold uppercase">O accede con</span>
+            <div class="flex-1 h-px bg-slate-600/30"></div>
+        </div>
+
+        <button class="btn btn-google" onclick="signInWithGoogle()">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="20">
+          <span>Continuar con Google</span>
+        </button>
+        
+        <button class="btn btn-github" onclick="signInWithGithub()">
+          <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.042-1.416-4.042-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path></svg>
+          <span>Acceder con GitHub</span>
+        </button>
+        
+        <button class="btn btn-login-red" onclick="showLoginFormFromWelcome()">
+          <span class="material-icons">login</span>
+          <span>Ingreso tradicional</span>
+        </button>
+
+        <div class="mt-8 text-xs text-slate-400 font-medium text-center footer-text">
+            <p class="mb-2">El acceso a los servicios de FacilitoTools está sujeto a la aceptación previa de nuestro marco regulatorio y políticas de protección.</p>
+            <div class="flex gap-4 justify-center">
+                <a href="politica-privacidad.html">Política de Privacidad</a>
+                <span>|</span>
+                <a href="terminos-condiciones.html">Términos y condiciones</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="login-screen" class="screen" style="display: none;">
+      <div id="login-form" class="login-form">
+          <h3 style="font-size: 2rem;">Bienvenido</h3>
+          <p class="form-subtitle">Ingresa tus credenciales para acceder</p>
+          
+          <div class="input-group">
+              <span class="material-icons field-icon">alternate_email</span>
+              <input type="email" id="login-email" placeholder="Email" class="input-field">
+          </div>
+          
+          <div class="input-group">
+              <span class="material-icons field-icon">lock_outline</span>
+              <input type="password" id="login-password" placeholder="Contraseña" class="input-field">
+              <span class="material-icons password-toggle" onclick="togglePasswordVisibility('login-password', this)">visibility</span>
+          </div>
+          
+          <div class="recaptcha-container">
+              <div id="login-recaptcha"></div>
+          </div>
+          
+          <button class="primary-btn" onclick="loginWithEmail()">
+              <span>Iniciar Sesión</span>
+          </button>
+          
+          <div class="text-link">
+              <a href="#" onclick="showRecoverPasswordForm(); return false;">¿Problemas para entrar? Recuperar</a>
+          </div>
+          
+          <div class="separator"><span>o</span></div>
+          
+          <button class="register-btn" onclick="showRegisterForm()">No tengo cuenta, registrarme</button>
+      </div>
+
+      <div id="register-form" class="register-form">
+          <h3 style="font-size: 2rem;">Crear cuenta</h3>
+          <p class="form-subtitle">Forma parte de nuestra comunidad</p>
+          
+          <div class="input-group">
+              <span class="material-icons field-icon">person_outline</span>
+              <input type="text" id="register-name" placeholder="Nombre completo" class="input-field">
+          </div>
+          
+          <div class="input-group">
+              <span class="material-icons field-icon">mail_outline</span>
+              <input type="email" id="register-email" placeholder="Email institucional" class="input-field">
+          </div>
+          
+          <div class="input-group">
+              <span class="material-icons field-icon">lock_open</span>
+              <input type="password" id="register-password" placeholder="Contraseña (mín. 6)" class="input-field">
+              <span class="material-icons password-toggle" onclick="togglePasswordVisibility('register-password', this)">visibility</span>
+          </div>
+          
+          <div class="input-group">
+              <span class="material-icons field-icon">shield</span>
+              <input type="password" id="register-confirm-password" placeholder="Confirmar contraseña" class="input-field">
+              <span class="material-icons password-toggle" onclick="togglePasswordVisibility('register-confirm-password', this)">visibility</span>
+          </div>
+          
+          <div class="recaptcha-container">
+              <div id="register-recaptcha"></div>
+          </div>
+          
+          <!-- Checkbox de términos -->
+          <div class="terms-check-wrapper" onclick="document.getElementById('accept-terms-inline').click(); event.stopPropagation();">
+              <input type="checkbox" id="accept-terms-inline" onclick="event.stopPropagation()">
+              <label for="accept-terms-inline" onclick="event.stopPropagation()">
+                  Acepto los <a href="terminos-condiciones.html" onclick="event.stopPropagation()">Términos y Condiciones</a> y la <a href="politica-privacidad.html" onclick="event.stopPropagation()">Política de Privacidad</a>
+              </label>
+          </div>
+
+          <button class="primary-btn" onclick="openTermsModal()">
+              <span>Registrarse ahora</span>
+          </button>
+          
+          <div class="text-link">
+              ¿Ya eres miembro? <a href="#" onclick="showLoginForm(); return false;">Inicia sesión</a>
+          </div>
+      </div>
+
+      <div id="recover-password-form" class="recover-password-form">
+          <div class="text-center mb-6">
+              <span class="material-icons text-blue-400 text-6xl">key</span>
+          </div>
+          <h3 style="font-size: 2rem;">¿Olvidaste tu clave?</h3>
+          <p class="form-subtitle">Enviaremos instrucciones a tu correo</p>
+          
+          <div class="input-group">
+              <span class="material-icons field-icon">mark_email_read</span>
+              <input type="email" id="recover-email" placeholder="Email registrado" class="input-field">
+          </div>
+          
+          <button class="recover-btn" onclick="recoverPassword()">
+              <span>Enviar enlace de recuperación</span>
+          </button>
+          
+          <div class="text-link">
+              <a href="#" onclick="showLoginForm(); return false;" class="flex items-center justify-center gap-2">
+                  <span class="material-icons text-sm">arrow_back</span> Volver al inicio
+              </a>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="terms-modal" class="modal-overlay fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[20000] hidden flex items-center justify-center p-4">
+    <div class="modal-3d animate-in zoom-in duration-300">
+        <div class="flex flex-col items-center text-center">
+            <span class="material-icons text-5xl text-emerald-400 mb-4">verified</span>
+            <h4 class="text-xl font-bold mb-2 text-white">Términos de Servicio</h4>
+            <div class="bg-slate-800/50 p-4 rounded-2xl text-sm text-slate-300 mb-6 text-left border border-slate-700">
+                Al registrarte, confirmas que eres mayor de edad y que harás un uso responsable de los servicios de FacilitoTools. No se permiten actividades ilícitas.
+            </div>
+            <label class="flex items-start gap-3 mb-6 cursor-pointer group">
+                <input type="checkbox" id="accept-terms-check" class="mt-1 w-5 h-5 accent-blue-500 rounded">
+                <span class="text-sm text-slate-400 text-left group-hover:text-slate-200 transition-colors">Acepto los términos y el aviso de privacidad de datos.</span>
+            </label>
+            <button id="confirm-terms-btn" class="primary-btn !m-0 disabled:opacity-50 disabled:shadow-none" disabled>
+                Confirmar Registro
+            </button>
+            <button onclick="closeTermsModal()" class="mt-4 text-sm font-semibold text-slate-400 hover:text-white transition-colors">Quizás más tarde</button>
+        </div>
+    </div>
+  </div>
+
+  <!-- NUEVO: Modal de mensajes amigables -->
+  <div id="message-modal" class="message-modal-overlay">
+    <div id="message-modal-content" class="message-modal-content">
+      <div id="message-modal-icon" class="message-modal-icon">
+        <span class="material-icons" style="font-size: 56px; color: #3b82f6;">info</span>
+      </div>
+      <p id="message-modal-text" class="message-modal-text"></p>
+    </div>
+  </div>
+  
+  <div id="loading-indicator" class="fixed inset-0 bg-black/60 backdrop-blur-md z-[10000] hidden items-center justify-center">
+      <div class="flex gap-2">
+          <div class="w-4 h-4 rounded-full bg-blue-500 animate-bounce"></div>
+          <div class="w-4 h-4 rounded-full bg-emerald-400 animate-bounce [animation-delay:-.3s]"></div>
+          <div class="w-4 h-4 rounded-full bg-blue-500 animate-bounce [animation-delay:-.5s]"></div>
+      </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { 
+      getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, 
+      onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider, 
+      GithubAuthProvider, signInWithPopup, sendEmailVerification, signOut
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { 
+      getFirestore, doc, setDoc, serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    let auth, db;
+    let recaptchaSiteKey = "6Lfy85ssAAAAAAV0CGl1-aoW-mLKjuKxxm0-YpNn";
+    let appConfig;
+    
+    let loginRecaptchaWidgetId = null;
+    let registerRecaptchaWidgetId = null;
+    let recaptchaRefreshTimer = null;
+
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const welcomeScreen = document.getElementById('welcome-screen');
+    const loginScreen = document.getElementById('login-screen');
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const recoverPasswordForm = document.getElementById('recover-password-form');
+    const termsModal = document.getElementById('terms-modal');
+    const termsCheck = document.getElementById('accept-terms-check');
+    const confirmTermsBtn = document.getElementById('confirm-terms-btn');
+
+    // NUEVO: Sistema de mensajes amigables
+    const messageModal = document.getElementById('message-modal');
+    const messageModalContent = document.getElementById('message-modal-content');
+    const messageModalIcon = document.getElementById('message-modal-icon');
+    const messageModalText = document.getElementById('message-modal-text');
+
+    // ✅ Generar deviceId único
+    async function getDeviceModel() {
+        try {
+            if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
+                const uaData = await navigator.userAgentData.getHighEntropyValues(['model', 'platform', 'platformVersion']);
+                return uaData.model || uaData.platform || 'Unknown Device';
+            }
+        } catch (e) {
+            console.error('Error getting device model:', e);
+        }
+        return 'Unknown Device';
+    }
+
+    function getDeviceId() {
+        let deviceId = localStorage.getItem('deviceId');
+        if (!deviceId) {
+            deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('deviceId', deviceId);
+        }
+        return deviceId;
+    }
+
+    function getUrlParameter(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
+
+    // ✅ Función de redirección usando returnTo y sessionStorage.
+    // La navegación solo ocurre después de que el backend confirme la cookie
+    // httpOnly firmada; de lo contrario actividad.html devolvería al login.
+    let sessionBootstrapPromise = null;
+    async function redirectAfterAuth(user) {
+        if (user && !user.emailVerified) {
+            window.location.href = "verificacion.html";
+            return;
+        }
+        if (!user) return;
+
+        if (sessionBootstrapPromise) return sessionBootstrapPromise;
+        sessionBootstrapPromise = (async () => {
+            const deviceModel = await getDeviceModel();
+            const idToken = await user.getIdToken(true);
+            const response = await fetch('/api/login-success', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'same-origin',
+                body: JSON.stringify({ idToken, deviceModel })
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok || !data.success) {
+                throw new Error(data.error || 'El servidor no pudo crear la sesión.');
+            }
+
+        let returnTo = getUrlParameter('returnTo');
+        if (!returnTo || returnTo === 'null' || returnTo === 'undefined') {
+            returnTo = sessionStorage.getItem('returnTo');
+        }
+
+        if (returnTo) {
+            try {
+                let decodedUrl = decodeURIComponent(returnTo);
+                // Si la URL no empieza con /, se la agregamos para asegurar que sea tratada como relativa interna
+                if (!decodedUrl.startsWith('/') && !decodedUrl.includes('://')) {
+                    decodedUrl = '/' + decodedUrl;
+                }
+                
+                if (decodedUrl.startsWith('/') && !decodedUrl.includes('//')) {
+                    sessionStorage.removeItem('returnTo');
+                    window.location.href = decodedUrl;
+                    return;
+                }
+            } catch (e) {
+                console.warn('URL de retorno inválida:', e);
+            }
+        }
+        
+            window.location.href = "actividad";
+        })().catch(async (error) => {
+            console.error('Error creando la sesión del servidor:', error);
+            sessionBootstrapPromise = null;
+            try { await signOut(auth); } catch (_) {}
+            hideLoadingOverlay();
+            showMessageModal('No se pudo establecer la sesión. Intenta nuevamente en unos segundos.', 'error');
+        });
+        return sessionBootstrapPromise;
+    }
+
+    // Función para convertir errores técnicos a mensajes amigables
+    function getFriendlyErrorMessage(error) {
+        const errorCode = error.code || '';
+        const errorMessage = error.message || '';
+        
+        const errorMessages = {
+            'auth/email-already-in-use': 'Este correo ya está registrado. Intenta iniciar sesión o usa otro correo.',
+            'auth/invalid-email': 'El formato del correo electrónico no es válido.',
+            'auth/operation-not-allowed': 'Esta operación no está permitida en este momento.',
+            'auth/weak-password': 'La contraseña es muy débil. Usa al menos 6 caracteres.',
+            'auth/user-disabled': 'Esta cuenta ha sido deshabilitada.',
+            'auth/user-not-found': 'No existe una cuenta con este correo electrónico.',
+            'auth/wrong-password': 'Contraseña incorrecta. Por favor verifica tus datos.',
+            'auth/invalid-credential': 'Las credenciales proporcionadas son incorrectas.',
+            'auth/too-many-requests': 'Demasiados intentos fallidos. Intenta más tarde.',
+            'auth/network-request-failed': 'Error de conexión. Verifica tu internet e intenta nuevamente.',
+            'auth/popup-closed-by-user': 'Has cerrado la ventana de autenticación.',
+            'auth/cancelled-popup-request': 'Operación cancelada.',
+            'auth/popup-blocked': 'El navegador bloqueó la ventana emergente. Permite ventanas emergentes e intenta nuevamente.',
+            'auth/account-exists-with-different-credential': 'Ya existe una cuenta con este correo usando otro método de acceso.',
+            'auth/invalid-verification-code': 'El código de verificación no es válido.',
+            'auth/invalid-verification-id': 'El ID de verificación no es válido.',
+            'auth/missing-verification-code': 'Falta el código de verificación.',
+            'auth/missing-verification-id': 'Falta el ID de verificación.',
+            'auth/requires-recent-login': 'Por seguridad, debes iniciar sesión nuevamente.',
+            'auth/expired-action-code': 'El código ha expirado. Solicita uno nuevo.',
+            'auth/invalid-action-code': 'El código no es válido. Solicita uno nuevo.',
+        };
+
+        if (errorMessages[errorCode]) {
+            return errorMessages[errorCode];
+        }
+
+        if (errorMessage.toLowerCase().includes('firebase')) {
+            return 'Ocurrió un error inesperado. Por favor intenta nuevamente.';
+        }
+
+        return 'Ha ocurrido un problema. Intenta nuevamente en unos momentos.';
+    }
+
+    // Función para mostrar modal de mensajes
+    function showMessageModal(message, type = 'info') {
+        const iconElement = messageModalIcon.querySelector('.material-icons');
+        
+        const icons = {
+            'success': { icon: 'check_circle', color: '#10b981' },
+            'error': { icon: 'error', color: '#ef4444' },
+            'info': { icon: 'info', color: '#3b82f6' },
+            'warning': { icon: 'warning', color: '#f59e0b' },
+            'loading': { icon: 'sync', color: '#3b82f6' }
+        };
+
+        const iconConfig = icons[type] || icons.info;
+        iconElement.textContent = iconConfig.icon;
+        iconElement.style.color = iconConfig.color;
+        
+        if (type === 'loading') {
+            iconElement.classList.add('animate-spin');
+        } else {
+            iconElement.classList.remove('animate-spin');
+        }
+        
+        messageModalText.textContent = message;
+        messageModal.classList.add('show');
+        messageModalContent.classList.remove('closing');
+
+        if (type !== 'loading') {
+            setTimeout(() => {
+                closeMessageModal();
+            }, 3000);
+        }
+    }
+
+    // Función para cerrar el modal
+    function closeMessageModal() {
+        messageModalContent.classList.add('closing');
+        setTimeout(() => {
+            messageModal.classList.remove('show');
+            messageModalContent.classList.remove('closing');
+        }, 300);
+    }
+
+    messageModal.addEventListener('click', (e) => {
+        if (e.target === messageModal) {
+            closeMessageModal();
+        }
+    });
+
+    function showLoadingOverlay() { loadingIndicator.style.display = 'flex'; }
+    function hideLoadingOverlay() { loadingIndicator.style.display = 'none'; }
+
+    function hideAllForms() {
+        if (loginForm) loginForm.style.display = 'none';
+        if (registerForm) registerForm.style.display = 'none';
+        if (recoverPasswordForm) recoverPasswordForm.style.display = 'none';
+    }
+
+    window.goToWelcomeScreen = function() {
+        welcomeScreen.style.display = 'flex';
+        loginScreen.style.display = 'none';
+        hideAllForms();
+    };
+
+    window.showLoginFormFromWelcome = function() {
+        welcomeScreen.style.display = 'none';
+        loginScreen.style.display = 'flex';
+        showLoginForm();
+    };
+
+    window.showRegisterFormFromWelcome = function() {
+        welcomeScreen.style.display = 'none';
+        loginScreen.style.display = 'flex';
+        showRegisterForm();
+    };
+
+    window.openTermsModal = () => {
+        const inlineCheck = document.getElementById('accept-terms-inline');
+        if (!inlineCheck || !inlineCheck.checked) {
+            showMessageModal('Debes aceptar los Términos y Condiciones para continuar', 'warning');
+            return;
+        }
+
+        const name = document.getElementById('register-name')?.value;
+        const email = document.getElementById('register-email')?.value;
+        const password = document.getElementById('register-password')?.value;
+        
+        const recaptchaResponse = grecaptcha.getResponse(registerRecaptchaWidgetId);
+        if (!recaptchaResponse) {
+            showMessageModal('Por favor, verifica que no eres un robot', 'warning');
+            return;
+        }
+        
+        if (!name || !email || !password) {
+            showMessageModal('Completa todos los campos antes de continuar', 'warning');
+            return;
+        }
+        
+        termsModal.style.display = 'flex';
+    };
+
+    window.closeTermsModal = () => {
+        termsModal.style.display = 'none';
+    };
+
+    window.showTermsModal = function() {
+        termsModal.style.display = 'flex';
+        if (termsCheck) termsCheck.checked = false;
+        if (confirmTermsBtn) confirmTermsBtn.disabled = true;
+    };
+
+    if (termsCheck) {
+        termsCheck.addEventListener('change', () => {
+            if (confirmTermsBtn) confirmTermsBtn.disabled = !termsCheck.checked;
+        });
+    }
+
+    if (confirmTermsBtn) {
+        confirmTermsBtn.addEventListener('click', () => {
+            closeTermsModal();
+            registerNewAccount();
+        });
+    }
+
+    window.recaptchaOnLoad = function() {
+        if (loginForm?.style.display === 'flex') {
+            initLoginRecaptcha();
+        } else if (registerForm?.style.display === 'flex') {
+            initRegisterRecaptcha();
+        }
+    };
+
+    function initLoginRecaptcha() {
+        if (loginRecaptchaWidgetId !== null) {
+            grecaptcha.reset(loginRecaptchaWidgetId);
+            return;
+        }
+        const container = document.getElementById('login-recaptcha');
+        if (container && window.grecaptcha) {
+            loginRecaptchaWidgetId = grecaptcha.render(container, {
+                'sitekey': recaptchaSiteKey,
+                'theme': 'light',
+                'callback': () => startRecaptchaRefreshTimer(loginRecaptchaWidgetId)
+            });
+        }
+    }
+
+    function initRegisterRecaptcha() {
+        if (registerRecaptchaWidgetId !== null) {
+            grecaptcha.reset(registerRecaptchaWidgetId);
+            return;
+        }
+        const container = document.getElementById('register-recaptcha');
+        if (container && window.grecaptcha) {
+            registerRecaptchaWidgetId = grecaptcha.render(container, {
+                'sitekey': recaptchaSiteKey,
+                'theme': 'light',
+                'callback': () => startRecaptchaRefreshTimer(registerRecaptchaWidgetId)
+            });
+        }
+    }
+
+    function startRecaptchaRefreshTimer(widgetId) {
+        if (recaptchaRefreshTimer) clearTimeout(recaptchaRefreshTimer);
+        recaptchaRefreshTimer = setTimeout(() => {
+            if (widgetId !== null && window.grecaptcha) {
+                grecaptcha.reset(widgetId);
+                startRecaptchaRefreshTimer(widgetId);
+            }
+        }, 50000);
+    }
+
+    window.showRegisterForm = () => {
+        hideAllForms();
+        if (registerForm) registerForm.style.display = 'flex';
+        setTimeout(() => initRegisterRecaptcha(), 100);
+    };
+
+    window.showLoginForm = () => {
+        hideAllForms();
+        if (loginForm) loginForm.style.display = 'flex';
+        setTimeout(() => initLoginRecaptcha(), 100);
+    };
+
+    window.showRecoverPasswordForm = () => {
+        hideAllForms();
+        if (recoverPasswordForm) recoverPasswordForm.style.display = 'flex';
+        if (recaptchaRefreshTimer) {
+            clearTimeout(recaptchaRefreshTimer);
+            recaptchaRefreshTimer = null;
+        }
+    };
+
+    window.togglePasswordVisibility = (inputId, icon) => {
+        const input = document.getElementById(inputId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.textContent = 'visibility_off';
+        } else {
+            input.type = 'password';
+            icon.textContent = 'visibility';
+        }
+    };
+
+    async function validateRecaptchaWithBackend(recaptchaResponse) {
+        try {
+            const response = await fetch('/api/validate-recaptcha', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ recaptchaResponse })
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'Error validando reCAPTCHA');
+            return data.success;
+        } catch (error) {
+            console.error('Error validando reCAPTCHA:', error);
+            throw error;
+        }
+    }
+
+    async function initFirebase() {
+      try {
+        const response = await fetch('/api/config');
+        appConfig = await response.json();
+        const app = initializeApp(appConfig.firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+
+        if (appConfig.recaptchaSiteKey) {
+            recaptchaSiteKey = appConfig.recaptchaSiteKey;
+        }
+
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            if (user.emailVerified) {
+                redirectAfterAuth(user);
+            } else {
+                const returnTo = getUrlParameter('returnTo');
+                const verificationUrl = returnTo ? `verificacion.html?returnTo=${encodeURIComponent(returnTo)}` : "verificacion.html";
+                window.location.href = verificationUrl;
+            }
+          } else {
+            setTimeout(() => {
+                goToWelcomeScreen();
+                hideLoadingOverlay();
+            }, 500);
+          }
+        });
+      } catch (error) {
+        console.error("Error al cargar configuración:", error);
+        setTimeout(() => {
+            goToWelcomeScreen();
+            hideLoadingOverlay();
+        }, 500);
+      }
+    }
+
+    initFirebase();
+
+    // ================================================================
+    // ✅ SOLUCIÓN DEFINITIVA: keepalive: true + await + delays
+    // ================================================================
+    async function notifyBackendWelcomeEmail(user, signal = null) {
+        console.log('[🔔 NOTIFY] Iniciando notificación backend', {
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName
+        });
+
+        try {
+            if (!user || !user.uid || !user.email) {
+                console.warn('[⚠️ NOTIFY] Datos incompletos');
+                return;
+            }
+
+            const idToken = await user.getIdToken();
+
+            // ✅ keepalive: true asegura que la petición NO se cancele al redirigir
+            const fetchOptions = {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ idToken }),
+                keepalive: signal ? false : true  // ✅ CLAVE: Mantiene la petición viva después de redirect
+            };
+            if (signal) fetchOptions.signal = signal;
+
+            const response = await fetch('/api/notify-verification', fetchOptions);
+
+            console.log('[📥 NOTIFY] Respuesta recibida', {
+                status: response.status,
+                ok: response.ok
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('[✅ NOTIFY] Correo enviado exitosamente', data);
+            } else {
+                console.error('[❌ NOTIFY] Error del servidor:', response.status);
+            }
+
+        } catch (err) {
+            console.error('[❌ NOTIFY] Error en petición:', err.message);
+        }
+    }
+
+    // ================================================================
+    // ✅ GOOGLE LOGIN: await + delay 500ms + delay 1000ms
+    // ================================================================
+    window.signInWithGoogle = async function() {
+        try {
+            showLoadingOverlay();
+            const provider = new GoogleAuthProvider();
+            provider.setCustomParameters({ prompt: 'select_account' });
+            
+            console.log('[🔵 GOOGLE] Iniciando autenticación...');
+            const result = await signInWithPopup(auth, provider);
+            console.log('[🔵 GOOGLE] Login exitoso:', result.user.email);
+
+            // 1. Guardar perfil
+            await saveUserProfile(result.user, result.user.displayName);
+            console.log('[🔵 GOOGLE] Perfil guardado');
+
+            // ✅ CORRECCIÓN: Detectar si es usuario nuevo
+            const isNewUser = !!(result._tokenResponse?.isNewUser === true || 
+                              (result.additionalUserInfo && result.additionalUserInfo.isNewUser === true));
+            console.log('[🔵 GOOGLE] ¿Usuario nuevo?', isNewUser);
+
+            // La sincronización con el backend se realiza una sola vez en
+            // redirectAfterAuth(). onAuthStateChanged puede invocarlo también
+            // cuando Firebase restaura una sesión persistida; esa función usa
+            // sessionBootstrapPromise para deduplicar ambas rutas.
+            // 3. ✅ Delay de seguridad 500ms
+            console.log('[🔵 GOOGLE] Delay seguridad 500ms...');
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            // 4. Mostrar mensaje
+            showMessageModal('Inicio de sesión exitoso', 'success');
+            
+            // 5. ✅ Delay antes de redirección 1000ms
+            console.log('[🔵 GOOGLE] Delay pre-redirect 1000ms...');
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // 6. Redirigir
+            console.log('[🔵 GOOGLE] Redirigiendo...');
+            redirectAfterAuth(result.user);
+            
+        } catch (error) {
+            console.error('[❌ GOOGLE] Error:', error);
+            hideLoadingOverlay();
+            showMessageModal(getFriendlyErrorMessage(error), 'error');
+        }
+    };
+
+    // ================================================================
+    // ✅ GITHUB LOGIN: await + delay 500ms + delay 1000ms
+    // ================================================================
+    window.signInWithGithub = async function() {
+        try {
+            showLoadingOverlay();
+            const provider = new GithubAuthProvider();
+            provider.setCustomParameters({ allow_signup: 'true' });
+            
+            console.log('[⚫ GITHUB] Iniciando autenticación...');
+            const result = await signInWithPopup(auth, provider);
+            console.log('[⚫ GITHUB] Login exitoso:', result.user.email);
+
+            // 1. Guardar perfil
+            await saveUserProfile(result.user, result.user.displayName);
+            console.log('[⚫ GITHUB] Perfil guardado');
+
+            // ✅ CORRECCIÓN: Detectar si es usuario nuevo
+            const isNewUser = !!(result._tokenResponse?.isNewUser === true || 
+                              (result.additionalUserInfo && result.additionalUserInfo.isNewUser === true));
+            console.log('[⚫ GITHUB] ¿Usuario nuevo?', isNewUser);
+
+            // La sincronización con el backend se realiza una sola vez en
+            // redirectAfterAuth(). onAuthStateChanged puede invocarlo también
+            // cuando Firebase restaura una sesión persistida; esa función usa
+            // sessionBootstrapPromise para deduplicar ambas rutas.
+            // 3. ✅ Delay de seguridad 500ms
+            console.log('[⚫ GITHUB] Delay seguridad 500ms...');
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            // 4. Mostrar mensaje
+            showMessageModal('Inicio de sesión exitoso', 'success');
+            
+            // 5. ✅ Delay antes de redirección 1000ms
+            console.log('[⚫ GITHUB] Delay pre-redirect 1000ms...');
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // 6. Redirigir
+            console.log('[⚫ GITHUB] Redirigiendo...');
+            redirectAfterAuth(result.user);
+            
+        } catch (error) {
+            console.error('[❌ GITHUB] Error:', error);
+            hideLoadingOverlay();
+            showMessageModal(getFriendlyErrorMessage(error), 'error');
+        }
+    };
+
+    // ================================================================
+    // ✅ LOGIN CON EMAIL - CORREGIDO: NO REPORTAR FALLOS SI ES EXITOSO
+    // ================================================================
+    window.loginWithEmail = async () => {
+      const email = document.getElementById('login-email')?.value;
+      const password = document.getElementById('login-password')?.value;
+      
+      if (!email || !password) { 
+          showMessageModal('Por favor completa todos los campos', 'warning');
+          return; 
+      }
+      
+      const recaptchaResponse = grecaptcha.getResponse(loginRecaptchaWidgetId);
+      if (!recaptchaResponse) { 
+          showMessageModal('Por favor, verifica que no eres un robot', 'warning');
+          return; 
+      }
+      
+      showLoadingOverlay();
+      
+      try {
+          // ✅ 1. VALIDAR CON EL BACKEND ANTES DE FIREBASE
+          const deviceId = getDeviceId();
+          const deviceModel = await getDeviceModel();
+          const returnTo = getUrlParameter('returnTo') || sessionStorage.getItem('returnTo') || '';
+          
+          let backendResponse;
+          let backendData;
+          let attempts = 0;
+          const maxAttempts = 3;
+
+          while (attempts < maxAttempts) {
+              try {
+                  const controller = new AbortController();
+                  const timeoutId = setTimeout(() => controller.abort(), 25000); // 25s timeout
+
+                  if (attempts > 0) {
+                      showMessageModal('Conectando al servidor...', 'loading');
+                  }
+
+                  backendResponse = await fetch('/api/login', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                          email,
+                          password,
+                          recaptchaResponse,
+                          returnTo,
+                          deviceId,
+                          deviceModel
+                      }),
+                      signal: controller.signal
+                  });
+
+                  clearTimeout(timeoutId);
+                  backendData = await backendResponse.json();
+                  break;
+              } catch (fetchError) {
+                  attempts++;
+                  if (attempts >= maxAttempts) throw fetchError;
+                  await new Promise(resolve => setTimeout(resolve, 2000));
+              }
+          }
+
+          if (attempts > 0) closeMessageModal();
+
+          // ✅ 2. SI EL BACKEND DEVUELVE ERROR account_blocked, DETENER
+          if (!backendResponse.ok) {
+              hideLoadingOverlay();
+              if (loginRecaptchaWidgetId !== null) grecaptcha.reset(loginRecaptchaWidgetId);
+
+              if (backendData.error === 'account_blocked') {
+                  const hoursRemaining = Math.ceil(backendData.remainingMinutes / 60);
+                  showMessageModal(
+                      `Tu cuenta está bloqueada por seguridad debido a múltiples intentos fallidos. Intenta nuevamente en ${hoursRemaining} hora(s).`,
+                      'error'
+                  );
+                  return;
+              }
+
+              showMessageModal(backendData.error || 'Error en la validación', 'error');
+              return;
+          }
+
+          // ✅ 3. SI EL BACKEND RESPONDE OK, CONTINUAR CON FIREBASE AUTH
+          const userCredential = await signInWithEmailAndPassword(auth, email, password);
+          await saveUserProfile(userCredential.user);
+          
+          // ✅ 4. LOGIN EXITOSO - NO REPORTAR COMO FALLO
+          hideLoadingOverlay();
+          
+          if (!userCredential.user.emailVerified) {
+              const verificationUrl = returnTo ? `verificacion.html?returnTo=${encodeURIComponent(returnTo)}` : "verificacion.html";
+              window.location.href = verificationUrl;
+          } else {
+              redirectAfterAuth(userCredential.user);
+          }
+
+      } catch (error) {
+          hideLoadingOverlay();
+          if (loginRecaptchaWidgetId !== null) grecaptcha.reset(loginRecaptchaWidgetId);
+
+          // ✅ 5. SOLO REPORTAR SI REALMENTE FALLÓ LA AUTENTICACIÓN
+          const errorCode = error.code || '';
+          
+          if (errorCode === 'auth/invalid-credential' || 
+              errorCode === 'auth/wrong-password' || 
+              errorCode === 'auth/user-not-found') {
+              
+              // ✅ REPORTAR INTENTO FALLIDO AL BACKEND
+              try {
+                  const deviceModel = await getDeviceModel();
+                  const reportResponse = await fetch('/api/report-failed-login', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ email, deviceModel })
+                  });
+
+                  const reportData = await reportResponse.json();
+
+                  if (reportData.success) {
+                      const remainingAttempts = reportData.maxAttempts - reportData.currentAttempts;
+                      
+                      if (reportData.isBlocked) {
+                          const hoursRemaining = Math.ceil(reportData.remainingMinutes / 60);
+                          showMessageModal(
+                              `Tu cuenta ha sido bloqueada por seguridad. Intenta nuevamente en ${hoursRemaining} hora(s).`,
+                              'error'
+                          );
+                      } else {
+                          showMessageModal(
+                              `Credenciales incorrectas. Te quedan ${remainingAttempts} intentos antes de que tu cuenta sea bloqueada por seguridad.`,
+                              'error'
+                          );
+                      }
+                  } else {
+                      showMessageModal(getFriendlyErrorMessage(error), 'error');
+                  }
+              } catch (reportError) {
+                  console.error('Error reportando intento fallido:', reportError);
+                  showMessageModal(getFriendlyErrorMessage(error), 'error');
+              }
+          } else {
+              showMessageModal(getFriendlyErrorMessage(error), 'error');
+          }
+      }
+    };
+
+    window.registerNewAccount = async () => {
+      const name = document.getElementById('register-name')?.value;
+      const email = document.getElementById('register-email')?.value;
+      const password = document.getElementById('register-password')?.value;
+      const confirm = document.getElementById('register-confirm-password')?.value;
+      
+      if (password !== confirm) { 
+          showMessageModal('Las contraseñas no coinciden. Verifica e intenta nuevamente.', 'error');
+          return; 
+      }
+      
+      const recaptchaResponse = grecaptcha.getResponse(registerRecaptchaWidgetId);
+      if (!recaptchaResponse) { 
+          showMessageModal('Por favor, verifica que no eres un robot', 'warning');
+          return; 
+      }
+      
+      showLoadingOverlay();
+      try {
+          await validateRecaptchaWithBackend(recaptchaResponse);
+          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+          await saveUserProfile(userCredential.user, name);
+
+          // ✅ CORRECCIÓN: enviar el correo de verificación real vía Firebase Auth
+          // (antes se importaba sendEmailVerification pero nunca se invocaba, por lo
+          // que el usuario jamás recibía el enlace y quedaba bloqueado en "verificacion.html")
+          try {
+              await sendEmailVerification(userCredential.user, {
+                  url: `${window.location.origin}/login`,
+                  handleCodeInApp: false
+              });
+          } catch (verificationError) {
+              console.error('Error enviando correo de verificación:', verificationError);
+          }
+
+          const returnTo = getUrlParameter('returnTo');
+          if (returnTo) {
+              sessionStorage.setItem('returnTo', returnTo);
+          }
+
+          // ✅ CORRECCIÓN: se reemplaza el fetch a '/api/send-verification-email'
+          // (endpoint inexistente en el backend, siempre devolvía 404) por la función
+          // notifyBackendWelcomeEmail ya definida en este archivo, que sí llama a un
+          // endpoint real ('/api/notify-verification') para enviar el correo de
+          // bienvenida y crear el token/empresa del usuario.
+          await notifyBackendWelcomeEmail(userCredential.user);
+
+          showMessageModal('Cuenta creada exitosamente. Revisa tu correo para verificar tu cuenta.', 'success');
+          setTimeout(() => {
+              window.location.href = "verificacion.html";
+          }, 2000);
+      } catch (error) {
+          hideLoadingOverlay();
+          if (registerRecaptchaWidgetId !== null) grecaptcha.reset(registerRecaptchaWidgetId);
+          showMessageModal(getFriendlyErrorMessage(error), 'error');
+      }
+    };
+
+    window.recoverPassword = async () => {
+        const email = document.getElementById('recover-email')?.value;
+        
+        if (!email) { 
+            showMessageModal('Por favor ingresa tu correo electrónico', 'warning');
+            return; 
+        }
+        
+        showLoadingOverlay();
+        try {
+            // ✅ CORRECCIÓN: se especifica actionCodeSettings para que el enlace del
+            // correo regrese a la página propia de recuperación (/reset-password) en
+            // vez de a la página genérica de Firebase. Antes el enlace no completaba
+            // el flujo dentro de la app.
+            await sendPasswordResetEmail(auth, email, {
+                url: `${window.location.origin}/reset-password`,
+                handleCodeInApp: false
+            });
+            hideLoadingOverlay();
+            showMessageModal('Hemos enviado un enlace de recuperación a tu correo. Revisa tu bandeja de entrada.', 'success');
+            setTimeout(() => showLoginForm(), 3000);
+        } catch (error) {
+            hideLoadingOverlay();
+            showMessageModal(getFriendlyErrorMessage(error), 'error');
+        }
+    };
+
+    async function saveUserProfile(user, name = null) {
+      try {
+        // ✅ CORRECCIÓN: usar colección "usuarios" (no "users") para mantener consistencia con el backend
+        const userDocRef = doc(db, "usuarios", user.uid);
+        await setDoc(userDocRef, {
+          email: user.email,
+          name: name || user.displayName || user.email.split('@')[0],
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        }, { merge: true });
+      } catch (e) { 
+          console.error('Error perfil:', e); 
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const returnTo = getUrlParameter('returnTo');
+        if (returnTo) {
+            sessionStorage.setItem('returnTo', returnTo);
+        }
+        
+        hideAllForms();
+        showLoadingOverlay();
+    });
+  </script>
+</body>
+</html>

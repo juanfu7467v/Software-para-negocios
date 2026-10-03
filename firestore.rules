@@ -1,0 +1,9 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // El acceso de datos se realiza desde la API con Firebase Admin y reglas del servidor.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

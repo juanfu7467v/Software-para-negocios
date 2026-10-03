@@ -1,6 +1,9 @@
-.cache/
-Downloads/
-skills/
-sandbox.txt
-soul.md
-error/
+node_modules/
+.env
+.env.*
+!.env.example
+.firebase/
+.firebase-debug.log
+npm-debug.log*
+.DS_Store
+coverage/

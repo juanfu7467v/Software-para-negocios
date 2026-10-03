@@ -1,20 +1,13 @@
-# fly.toml app configuration file generated for masitaprexv2
-
-app = 'masitaprexv2'
-primary_region = 'iad'
+app = 'tuturno'
+primary_region = 'scl'
 
 [build]
+  dockerfile = 'Dockerfile'
 
 [env]
-  FIREBASE_CLIENT_EMAIL = ''
-  FIREBASE_PRIVATE_KEY = ''
-  FIREBASE_PROJECT_ID = ''
-  FIREBASE_SERVICE_ACCOUNT = ''
-  HOST_URL = 'https://www.masitaprex.com'
-  RECAPTCHA_CLAVE_SECRETA = ''
-  RESEND_API_KEY = ''
-  SLACK_WEBHOOK_URL = ''
-  TELEGRAM_BOT_TOKEN = ''
+  NODE_ENV = 'production'
+  PORT = '8080'
+  TZ = 'America/Lima'
 
 [http_service]
   internal_port = 8080
@@ -23,13 +16,15 @@ primary_region = 'iad'
   auto_start_machines = true
   min_machines_running = 0
   processes = ['app']
-  
-  # Opciones para extender la retención e inactividad
-  kill_signal = 'SIGTERM'
-  kill_timeout = '1200s' # 20 minutos (1200 segundos) de margen antes del apague total
+
+[[http_service.checks]]
+  grace_period = '10s'
+  interval = '30s'
+  method = 'GET'
+  timeout = '5s'
+  path = '/api/health'
 
 [[vm]]
   memory = '512mb'
   cpu_kind = 'shared'
   cpus = 1
-  memory_mb = 512

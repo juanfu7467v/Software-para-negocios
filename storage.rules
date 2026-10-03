@@ -1,0 +1,9 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Las cargas pasan por Express/Firebase Admin; los enlaces con token permiten ver las imágenes necesarias.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
